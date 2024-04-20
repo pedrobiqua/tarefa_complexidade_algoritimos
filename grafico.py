@@ -7,13 +7,21 @@ from scipy.optimize import curve_fit
 def func(x, a, b):
     return a * x + b
 
-# Carregar os dados do arquivo Excel
-df = pd.read_excel('dados_ASC_10000.xlsx')
-#df = pd.read_excel('dados_DSC_10000.xlsx')
-#df = pd.read_excel('dados_RNG_10000.xlsx')
+# Carrega os dados do arquivo Excel
+df = pd.read_excel('dados_ASC_100000.xlsx')
+#df = pd.read_excel('dados_DSC_100000.xlsx')
+#df = pd.read_excel('dados_RNG_100000.xlsx')
+#f = pd.read_excel('dados_ASC_100.xlsx')
+#df = pd.read_excel('dados_DSC_100.xlsx')
+#df = pd.read_excel('dados_RNG_100.xlsx')
+
+
+# Definir o tamanho do gráfico
+plt.figure(figsize=(12, 8))
 
 # Para cada algoritmo
-for column in df.columns[:-1]:  # Ignorar a coluna 'TAM'
+markers = ['o', 'v', '^', '<', '>', 's', 'p', '*']  # Diferentes marcadores para cada algoritmo
+for i, column in enumerate(df.columns[:-1]):  # Ignorar a coluna 'TAM'
     # Coletar dados
     x = df['TAM']
     y = df[column]
@@ -21,22 +29,23 @@ for column in df.columns[:-1]:  # Ignorar a coluna 'TAM'
     # Ajustar a função aos dados
     popt, pcov = curve_fit(func, x, y)
 
-    # Prever o tempo de execução para um vetor duas vezes maior que o maior tamanho de entrada analisado
+    # Prevê o tempo de execução para um vetor duas vezes maior que o maior tamanho de entrada analisado
     prediction_x = 2 * max(x)
     prediction_y = func(prediction_x, *popt)
 
-    # Adicionar a previsão ao conjunto de dados
+    # Adiciona a previsão ao conjunto de dados
     x = np.append(x, prediction_x)
     y = np.append(y, prediction_y)
 
     # Criar o gráfico
-    plt.scatter(x[:-1], y[:-1], label=f'{column} Dados')  # Plot all points except the prediction
-    plt.scatter(prediction_x, prediction_y, label=f'{column} Previsão')  # Plot the prediction point
+    plt.scatter(x[:-1], y[:-1], label=f'{column} Dados', marker=markers[i % len(markers)])  # Plot da previsão
+    plt.scatter(prediction_x, prediction_y, label=f'{column} Previsão', marker=markers[i % len(markers)])  # Plot do ponto previsto
     plt.plot(x, func(x, *popt), label=f'{column} Ajuste: y = {popt[0]:.4f}x + {popt[1]:.2f}')
 
-# Configurar e exibir o gráfico
+# Configuração e exibição do gráfico
 plt.xlabel('Tamanho da Entrada')
 plt.ylabel('Tempo de Execução')
-plt.title('Gráfico de Tendência para Algoritmos de Sort')
-plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+plt.title('Gráfico de Tendência para Algoritmos de Sort em ordem Randômica')
+plt.grid(True)
+plt.legend(loc='best', fontsize='small')
 plt.show()
