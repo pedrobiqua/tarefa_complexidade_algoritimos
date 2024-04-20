@@ -9,6 +9,8 @@ def func(x, a, b):
 
 # Carregar os dados do arquivo Excel
 df = pd.read_excel('dados_ASC_10000.xlsx')
+#df = pd.read_excel('dados_DSC_10000.xlsx')
+#df = pd.read_excel('dados_RNG_10000.xlsx')
 
 # Para cada algoritmo
 for column in df.columns[:-1]:  # Ignorar a coluna 'TAM'
