@@ -27,4 +27,3 @@ def agora():
 def dif_time(a, b):
     #return b.second - a.second
     return a - b
-
